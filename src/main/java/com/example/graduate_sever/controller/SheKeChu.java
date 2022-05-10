@@ -1,28 +1,16 @@
 package com.example.graduate_sever.controller;
 
 
-import com.example.graduate_sever.common.DTO.DTO;
 import com.example.graduate_sever.common.DTO.SheKeDTO;
-import com.example.graduate_sever.common.EditUO.EditChanXueYanUO;
 import com.example.graduate_sever.common.EditUO.SheKeChuEditUO;
 import com.example.graduate_sever.common.JsonBean;
 import com.example.graduate_sever.common.ResVO;
-import com.example.graduate_sever.common.UO.ChanXueYanUO;
 import com.example.graduate_sever.common.UO.SheKeChuUO;
-import com.example.graduate_sever.common.WebSiteDateConfig;
-import com.example.graduate_sever.entity.ChanXueYanEntity;
-import com.example.graduate_sever.model.Teacher;
-import com.example.graduate_sever.service.ChanXueYanService;
 import com.example.graduate_sever.service.SheKeChuService;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class SheKeChu {

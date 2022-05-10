@@ -1,12 +1,8 @@
 package com.example.graduate_sever.service;
 
 import com.example.graduate_sever.common.*;
-import com.example.graduate_sever.common.DTO.DTO;
 import com.example.graduate_sever.common.DTO.MyShenBaoDTO;
-import com.example.graduate_sever.entity.ChanXueYanEntity;
 import com.example.graduate_sever.model.Teacher;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.util.List;
 

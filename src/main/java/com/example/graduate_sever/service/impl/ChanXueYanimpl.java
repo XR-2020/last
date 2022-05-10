@@ -2,26 +2,12 @@ package com.example.graduate_sever.service.impl;
 
 import com.example.graduate_sever.Dao.*;
 import com.example.graduate_sever.common.*;
-import com.example.graduate_sever.common.DTO.DTO;
 import com.example.graduate_sever.common.DTO.MyShenBaoDTO;
-import com.example.graduate_sever.entity.ChanXueYanEntity;
-import com.example.graduate_sever.entity.ParticipationEntity;
 import com.example.graduate_sever.model.*;
 import com.example.graduate_sever.service.ChanXueYanService;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.http.NameValuePair;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service("ChanXueYanService")
