@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.graduate_sever.Dao.XueKeJingSaiMapper">
+    <!--产学研实体映射-->
+    <resultMap id="JingSai" type="com.example.graduate_sever.model.Competition">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="finishtime" jdbcType="VARCHAR" property="finishtime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="grade" jdbcType="VARCHAR" property="grade"/>
+        <result column="level" jdbcType="VARCHAR" property="level"/>
+        <result column="teacher" property="teacher"/>
+        <result column="shenbao" property="shenbao"/>
+        <result column="metails" property="metails"/>
+        <result column="partment" property="partment"/>
+        <result column="student" jdbcType="VARCHAR" property="student"/>
+    </resultMap>
+    <resultMap id="JingSaiMyShenBaoModel" type="com.example.graduate_sever.common.People">
+        <result column="name" property="name"/>
+        <result column="id" property="id"/>
+        <result column="partment" property="partment"/>
+        <result column="finishtime" property="finishtime"/>
+    </resultMap>
+    <!--参与人映射-->
+    <resultMap id="JingSai_people" type="com.example.graduate_sever.common.People">
+        <result column="badeg" jdbcType="INTEGER" javaType="int" property="badge"/>
+        <result column="tea_name" jdbcType="VARCHAR" javaType="string" property="name"/>
+    </resultMap>
+    <resultMap id="JingSai_count" type="java.lang.Long"/>
+    <resultMap id="JingSaiMetails" type="com.example.graduate_sever.common.Metails">
+        <result column="metails" property="metails"></result>
+    </resultMap>
+
+
+    <select id="getAllJingSai" resultMap="JingSai">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select * from competition where status=1 limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};
+    </select>
+
+    <select id="getAllJingSaiPageTotal" resultMap="JingSai_count">
+        select count(*) JingSai_count from competition where status=1;
+    </select>
+    <!--删除一个学科竞赛成果-->
+    <delete id="deleteOneJingSai">
+        delete from competition where competition.id=#{id}
+    </delete>
+
+    <!--查询指定学科竞赛成果人员信息-->
+    <select id="getJingSaiDetail" resultMap="JingSai_people">
+        select teacher.tea_name,teacher.badeg from newparticipation,teacher where newparticipation.badge=teacher.badeg and newparticipation.ach_id=#{id} and newparticipation.type=#{type}
+    </select>
+<!--    &lt;!&ndash;学科竞赛成果全局模糊查询&ndash;&gt;-->
+    <select id="getSearchJingSai" resultMap="JingSai">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select c.* from competition c where status=1 and CONCAT(c.id,c.partment,c.name,c.finishtime,c.status,c.teacher,c.student,c.level,c.grade) LIKE CONCAT('%',#{key},'%') limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};
+    </select>
+    <select id="getSearchJingSaiPageTotal" resultMap="JingSai_count">
+        select count(*) JingSai_count from competition c where status=1 and CONCAT(c.id,c.partment,c.name,c.finishtime,c.status,c.teacher,c.student,c.level,c.grade)  LIKE CONCAT('%',#{key},'%');
+    </select>
+    <insert id="insertJingSai" parameterType="com.example.graduate_sever.entity.CompetitionEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO `graduate`.`competition`( `status`, `finishtime`, `student`, `level`, `grade`, `name`,`partment`,`teacher`)  VALUES (#{status,jdbcType=INTEGER},#{finishtime,jdbcType=VARCHAR},#{student,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="shenBaoJingSai" parameterType="com.example.graduate_sever.entity.CompetitionEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO `graduate`.`competition`( `status`, `finishtime`, `student`, `level`, `teacher`,`grade`, `name`,`partment`,`shenbao`,`metails`)  VALUES (#{status,jdbcType=INTEGER},#{finishtime,jdbcType=VARCHAR},#{student,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},'软件学院',#{badge,jdbcType=INTEGER},#{metails,jdbcType=BINARY})
+    </insert>
+
+    <select id="XueKeJingSaiMetails" parameterType="java.lang.Integer" resultMap="JingSaiMetails">
+        SELECT metails FROM `competition` where id=#{id}
+    </select>
+
+    <select id="selectXueKeJingSai" parameterType="java.lang.String" resultMap="JingSai">
+        select * from `competition` where status=1
+        <if test="name!=null">
+            and CONCAT(teacher) LIKE CONCAT('%',#{name},'%')
+        </if>
+        and finishtime between #{date1} and #{date2}
+    </select>
+
+    <select id="waitingxuekejingsai" resultMap="JingSai">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select * from `competition` where status=0 limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="waitingxuekejingsaiPageToTal" resultMap="JingSai_count">
+        select count(*) JingSai_count from competition where status=0
+    </select>
+
+    <update id="passXueKeJingSai" parameterType="java.lang.Integer">
+        update `competition` set `status`=#{ispass} where id=#{id}
+    </update>
+
+    <select id="getXueKeJingSaiDisData" resultMap="JingSaiMyShenBaoModel">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select c.name,c.id,c.partment,c.finishtime from `competition` c,newparticipation p where status=-1 and c.shenbao=p.badge and c.shenbao=#{badge} and p.type=1 limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <update id="editCompetition">
+        update `competition` set teacher=#{teacher},level=#{level},partment=#{partment},finishtime=#{finishtime},name=#{name},student=#{student},grade=#{grade} where id=#{id}
+    </update>
+</mapper>
+

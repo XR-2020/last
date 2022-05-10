@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.graduate_sever.Dao.RongYuChengHaoMapper">
+    <!--实体映射-->
+    <resultMap id="RongYu" type="com.example.graduate_sever.model.Honor">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="finishtime" jdbcType="VARCHAR" property="finishtime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="teacher" property="teacher"/>
+        <result column="shenbao" property="shenbao"/>
+        <result column="metails" property="metails"/>
+        <result column="level" jdbcType="VARCHAR" property="level"/>
+    </resultMap>
+    <resultMap id="RongYuMyShenBaoModel" type="com.example.graduate_sever.common.People">
+        <result column="name" property="name"/>
+        <result column="id" property="id"/>
+        <result column="partment" property="partment"/>
+        <result column="finishtime" property="finishtime"/>
+    </resultMap>
+    <!--参与人映射-->
+    <resultMap id="RongYu_people" type="com.example.graduate_sever.common.People">
+        <result column="badeg" jdbcType="INTEGER" javaType="int" property="badge"/>
+        <result column="tea_name" jdbcType="VARCHAR" javaType="string" property="name"/>
+    </resultMap>
+    <resultMap id="RongYucount" type="java.lang.Long"/>
+    <resultMap id="RongYuMetails" type="com.example.graduate_sever.common.Metails">
+        <result column="metails" property="metails"></result>
+    </resultMap>
+    <!--查询教研项目所有成果-->
+    <!--application.yml 中通过 type-aliases-package 指定了实体类的为了，因此-->
+    <select id="selectAllRongYuChengHao" resultMap="RongYu">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select * from honor where status=1 limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};
+    </select>
+    <select id="selectHonor" resultMap="RongYu">
+        select * from honor where id=#{id}
+    </select>
+
+    <!--删除一个教研项目-->
+    <delete id="deleteOneRongYu">
+        delete from honor where honor.id=#{id}
+    </delete>
+    <!--查询指定教研项目成果人员信息-->
+    <select id="getRongYuDetail" resultMap="RongYu_people">
+        select teacher.tea_name,teacher.badeg from newparticipation,teacher where newparticipation.badge=teacher.badeg and newparticipation.ach_id=#{id} and newparticipation.type=#{type}
+    </select>
+<!--    &lt;!&ndash;教研项目成果全局模糊查询&ndash;&gt;-->
+    <select id="getSearchRongYu" resultMap="RongYu">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select c.* from honor c where status=1 and CONCAT(c.id,c.partment,c.name,c.finishtime,c.status,c.level,c.teacher) LIKE CONCAT('%',#{key},'%') limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};
+    </select>
+
+    <select id="getSearchRongYuPageTotal" resultMap="RongYucount">
+        select count(*) RongYucount from honor c where status=1 and CONCAT(c.id,c.partment,c.name,c.finishtime,c.status,c.level,c.teacher) LIKE CONCAT('%',#{key},'%');
+    </select>
+    <select id="selectAllRongYuChengHaoPageTotal"  resultMap="RongYucount">
+        select count(*) RongYucount from honor where status=1
+    </select>
+    <insert id="insertRongYuChengHao" parameterType="com.example.graduate_sever.entity.HonorEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO honor(`status`, `name`, `finishtime`, `level`,`partment`,`teacher`) VALUES (#{status,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{finishtime,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR})
+    </insert>
+    <insert id="shenBaoRongYuChengHao" parameterType="com.example.graduate_sever.entity.HonorEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO honor(`status`, `name`, `finishtime`, `level`,`partment`,`shenbao`,`metails`,`teacher`) VALUES (#{status,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{finishtime,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{badge,jdbcType=INTEGER},#{metails,jdbcType=BINARY},#{teacher,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="RongYuChengHaoMetails" parameterType="java.lang.Integer" resultMap="RongYuMetails">
+        SELECT metails FROM `honor` where id=#{id}
+    </select>
+
+    <select id="selectRongYuChengHao" parameterType="java.lang.String" resultMap="RongYu">
+        select * from `honor` where status=1
+            <if test="name!=null">
+                and CONCAT(teacher) LIKE CONCAT('%',#{name},'%')
+            </if>
+        and finishtime between #{date1} and #{date2}
+    </select>
+
+    <select id="waitingrongyuchenghao" resultMap="RongYu">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select * from `honor` where status=0 limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="waitingrongyuchenghaoPageToTal" resultMap="RongYucount">
+        select count(*) RongYucount from honor where status=0
+    </select>
+
+    <update id="passRongYuChengHao" parameterType="java.lang.Integer">
+        update `honor` set `status`=#{ispass} where id=#{id}
+    </update>
+
+    <update id="editHonor">
+        update `honor` set teacher=#{teacher},level=#{level},partment=#{partment},finishtime=#{finishtime},name=#{name} where id=#{id}
+    </update>
+</mapper>
+

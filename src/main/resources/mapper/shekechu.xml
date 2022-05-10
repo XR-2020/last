@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.graduate_sever.Dao.SheKeChuMapper">
+    <!--实体映射-->
+    <resultMap id="SheKeChu" type="com.example.graduate_sever.model.SheKeChuModel">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="finishtime" jdbcType="VARCHAR" property="finishtime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="partment" jdbcType="VARCHAR" property="partment"/>
+        <result column="badge" jdbcType="INTEGER" property="badge"/>
+        <result column="shenbao" property="shenbao"/>
+        <result column="metails" property="metails"/>
+        <result column="jietidengji" property="jietidengji"/>
+        <result column="xiangmujibie" property="xiangmujibie"/>
+        <result column="jianglijibie" property="jianglijibie"/>
+        <result column="jianglidengji" property="jianglidengji"/>
+        <result column="huojiangleibie" property="huojiangleibie"/>
+        <result column="chengguotype" property="chengguotype"/>
+        <result column="danwei" property="danwei"/>
+    </resultMap>
+
+    <resultMap id="SheKeChuMetails" type="com.example.graduate_sever.common.Metails">
+        <result column="metails" property="metails"/>
+    </resultMap>
+
+    <!--参与人映射-->
+    <resultMap id="SheKeChu_People" type="com.example.graduate_sever.common.People">
+        <result column="badeg" jdbcType="INTEGER" javaType="int" property="badge"/>
+        <result column="tea_name" jdbcType="VARCHAR" javaType="string" property="name"/>
+    </resultMap>
+
+    <resultMap id="SheKeChuCount" type="java.lang.Long"/>
+
+    <select id="getAllKeYanHuoJiang" resultMap="SheKeChu,SheKeChuCount">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select * from shekechu where status=1 and type=#{type} limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};select count(*) SheKeChuCount from shekechu where status=1 and type=#{type} ;
+    </select>
+
+
+    <!--删除一个项目-->
+    <delete id="deleteOneKeYanHuoJiang">
+        delete from shekechu where id=#{id} and type=#{type}
+    </delete>
+    <!--查询指定教研项目成果人员信息-->
+    <select id="getKeYanHuoJiangDetail" resultMap="SheKeChu_People">
+        select teacher.tea_name,teacher.badeg from newparticipation,teacher where newparticipation.badge=teacher.badeg and newparticipation.ach_id=#{id} and newparticipation.type=#{type}
+    </select>
+<!--    &lt;!&ndash;教研项目成果全局模糊查询&ndash;&gt;-->
+    <select id="getSearchKeYanHuoJiang" resultMap="SheKeChu,SheKeChuCount">
+        <bind name="beginIndex" value="(pageIndex-1)*pageSize"></bind>
+        select distinct c.* from shekechu c,teacher t,newparticipation p where status=1 and c.type=#{type} and p.badge=t.badeg and p.ach_id=c.id and CONCAT(c.id,c.name,c.finishtime,t.tea_name,c.partment,c.danwei,c.xiangmujibie,c.jietidengji,c.chengguotype,c.jianglijibie,c.jianglidengji,c.huojiangleibie) LIKE CONCAT('%',#{key},'%') limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};
+        select count(*) SheKeChuCount from (select distinct c.* from shekechu c,teacher t,newparticipation p where status=1  and c.type=#{type} and p.badge=t.badeg and p.ach_id=c.id and CONCAT(c.id,c.name,c.finishtime,t.tea_name,c.partment,c.danwei,c.xiangmujibie,c.jietidengji,c.chengguotype,c.jianglijibie,c.jianglidengji,c.huojiangleibie) LIKE CONCAT('%',#{key},'%')) A
+    </select>
+
+    <insert id="insertSheKeChu" parameterType="com.example.graduate_sever.entity.SheKeChuEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO shekechu( `status`, `name`, `finishtime`, `partment`,`badge`,`type`,`jietidengji`,`xiangmujibie`,`jianglijibie`,`jianglidengji`,`huojiangleibie`,`chengguotype`,`danwei`) VALUES (#{status,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{finishtime,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{badge,jdbcType=INTEGER},#{type,jdbcType=VARCHAR},#{jietidengji,jdbcType=VARCHAR},#{xiangmujibie,jdbcType=VARCHAR},#{jianglijibie,jdbcType=VARCHAR},#{jianglidengji,jdbcType=VARCHAR},#{huojiangleibie,jdbcType=VARCHAR},#{chengguotype,jdbcType=VARCHAR},#{danwei,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="shenBaoSheKeChu" parameterType="com.example.graduate_sever.entity.SheKeChuEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO shekechu(`status`, `name`, `finishtime`, `partment`,`shenbao`,`type`,`jietidengji`,`xiangmujibie`,`jianglijibie`,`jianglidengji`,`huojiangleibie`,`chengguotype`,`danwei`,`metails`) VALUES (#{status,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{finishtime,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{shenbao,jdbcType=INTEGER},#{type,jdbcType=VARCHAR},#{jietidengji,jdbcType=VARCHAR},#{xiangmujibie,jdbcType=VARCHAR},#{jianglijibie,jdbcType=VARCHAR},#{jianglidengji,jdbcType=VARCHAR},#{huojiangleibie,jdbcType=VARCHAR},#{chengguotype,jdbcType=VARCHAR},#{danwei,jdbcType=VARCHAR},#{metails,jdbcType=BINARY})
+    </insert>
+
+    <select id="waitingSheKeChu" resultMap="SheKeChu">
+        select * from shekechu where status=0 and type=#{type} limit #{beginIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};select count(*) count13 from newsystem where status=1 ;
+    </select>
+
+    <select id="waitingSheKeChuPageToTal" resultMap="SheKeChuCount">
+        select count(*) SheKeChuCount from shekechu where status=0 and type=#{type};
+    </select>
+
+    <update id="editSheKeChu">
+        update `shekechu` set partment=#{partment},finishtime=#{finishtime},name=#{name},jietidengji=#{jietidengji},xiangmujibie=#{xiangmujibie},jianglijibie=#{jianglijibie},jianglidengji=#{jianglidengji},huojiangleibie=#{huojiangleibie},chengguotype=#{chengguotype},danwei=#{danwei} where id=#{id}
+    </update>
+
+    <delete id="deleteAllPeople">
+        delete from newparticipation where ach_id=#{id} and type=#{type}
+    </delete>
+
+    <update id="passSheKeChuChu" parameterType="java.lang.Integer">
+        update `shekechu` set `status`=#{pass} where id=#{id}
+    </update>
+
+    <select id="getSheKeChuMetails" parameterType="java.lang.Integer" resultMap="SheKeChuMetails">
+        SELECT metails FROM `shekechu` where id=#{id}
+    </select>
+
+</mapper>
+

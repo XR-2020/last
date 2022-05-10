@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.graduate_sever.Dao.ChanXueYanMapper">
+    <!--产学研实体映射-->
+    <resultMap id="ChanXueYan" type="com.example.graduate_sever.model.ChanXueYan">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="finishtime" jdbcType="VARCHAR" property="finishtime"/>
+        <result column="lianghua" jdbcType="VARCHAR" property="lianghua"/>
+        <result column="wenhao" jdbcType="VARCHAR" property="wenhao"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="partment" jdbcType="VARCHAR" property="partment"/>
+        <result column="badge" jdbcType="INTEGER" property="badge"/>
+        <result column="shenbao" property="shenbao"/>
+        <result column="metails" property="metails"/>
+    </resultMap>
+    <resultMap id="MyShenBaoModel" type="com.example.graduate_sever.model.MyShenBaoModel">
+        <result column="name" property="name"/>
+        <result column="id" property="id"/>
+        <result column="partment" property="partment"/>
+        <result column="finishtime" property="finishtime"/>
+    </resultMap>
+    <!--参与人映射-->
+    <resultMap id="ChanXueYan_people" type="com.example.graduate_sever.common.People">
+        <result column="badeg" jdbcType="INTEGER" javaType="int" property="badge"/>
+        <result column="tea_name" jdbcType="VARCHAR" javaType="string" property="name"/>
+    </resultMap>
+    <resultMap id="ChanXueYan_count" type="java.lang.Long"/>
+    <resultMap id="TeacherBadge" type="java.lang.Integer"/>
+    <resultMap id="ChanXueYanid" type="java.lang.Integer"/>
+    <resultMap id="ChanXueYanMetails" type="com.example.graduate_sever.common.Metails">
+        <result column="metails" property="metails"/>
+    </resultMap>
+
+    <!--教师下拉列表映射-->
+    <resultMap id="Teacher" type="com.example.graduate_sever.model.Teacher">
+        <result column="badeg" jdbcType="INTEGER" javaType="int" property="badge"/>
+        <result column="tea_name" jdbcType="VARCHAR" javaType="string" property="name"/>
+        <result column="password" jdbcType="VARCHAR" javaType="string" property="password"/>
+        <result column="role" jdbcType="INTEGER" javaType="int" property="role"/>
+    </resultMap>
+
+
+    <select id="getTeacherList" resultMap="Teacher">
+        SELECT * from teacher
+    </select>
+
+    <select id="getBadge" parameterType="java.lang.Integer" resultMap="TeacherBadge">
+        select teacher.badeg from  participation,teacher where participation.badge=teacher.badeg and participation.ach_id=#{id} and participation.type=#{type}
+    </select>
+
+    <select id="getDisData" resultMap="MyShenBaoModel">
+        select c.name,c.id,c.partment,c.finishtime from ${tablename} c where status=-1 and c.shenbao=#{badge}
+    </select>
+
+    <select id="getPageTotal" resultMap="ChanXueYan_count">
+        select count(*) ChanXueYan_count from ${tablename}  where status=-1  and shenbao=#{badge}
+    </select>
+
+    <select id="getDaiShenHeData" resultMap="MyShenBaoModel">
+        select c.name,c.id,c.partment,c.finishtime from ${tablename} c where status=0 and c.shenbao=#{badge}
+    </select>
+
+    <select id="getDaiShenHePageTotal" resultMap="ChanXueYan_count">
+        select count(*) ChanXueYan_count from ${tablename} c where status=0 and c.shenbao=#{badge}
+    </select>
+
+    <select id="getHadPassData" resultMap="MyShenBaoModel">
+        select c.name,c.id,c.partment,c.finishtime from ${tablename} c where status=1 and c.shenbao=#{badge}
+    </select>
+
+    <select id="getHadPassPageTotal" resultMap="ChanXueYan_count">
+        select count(*) ChanXueYan_count from ${tablename} c where status=1 and  c.shenbao=#{badge}
+    </select>
+
+    <delete id="deleteMyShenBao">
+        delete from ${tablename} where id=#{id}
+    </delete>
+
+    <delete id="deleteDaiShenHePartipation">
+        delete from participation where ach_id=#{id} and type=#{type}
+    </delete>
+
+    <delete id="deletePeople">
+        delete from participation where ach_id=#{id} and type=#{type}
+    </delete>
+
+    <select id="login" resultMap="Teacher">
+        SELECT * FROM `teacher` where badeg=#{username} and password=#{password}
+    </select>
+
+</mapper>
+
