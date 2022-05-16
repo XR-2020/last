@@ -40,7 +40,6 @@ public class NewSystemClawerimpl implements NewSystemCrawlerService {
 
     @Override
     public void newSystemCrawlerWebSite(String td, CloseableHttpClient httpClient, HttpPost list, HttpPost view) {
-        System.out.println(td);
         List<NameValuePair> listparams= new ArrayList<NameValuePair>();
         String date=WebCookie.getDate();
         int ref = 0;
