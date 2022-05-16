@@ -17,4 +17,6 @@ public interface  ChanXueYanService {
     int deleteMyShenBao(Integer id, String tablename);
     DaiShenHeEditTableData selectProject(Integer id, String tablename);
     Teacher login(Integer username, String password);
+
+    int addteacher(String name, Integer badge, Integer role);
 }

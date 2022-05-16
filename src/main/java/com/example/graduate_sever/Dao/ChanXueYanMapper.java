@@ -24,4 +24,6 @@ public interface ChanXueYanMapper {
 
 
     Teacher login(Integer username, String password);
+
+    int addteacher(String name, Integer badge, Integer password, Integer role);
 }

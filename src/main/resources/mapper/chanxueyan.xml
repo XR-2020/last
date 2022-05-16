@@ -89,5 +89,8 @@
         SELECT * FROM `teacher` where badeg=#{username} and password=#{password}
     </select>
 
+    <insert id="addteacher">
+        INSERT IGNORE INTO teacher(`tea_name`,`badeg`,`password`,`role`) VALUES (#{name},#{badge},#{password},#{role})
+    </insert>
 </mapper>
 

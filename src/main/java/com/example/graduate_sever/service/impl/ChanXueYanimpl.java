@@ -49,6 +49,14 @@ public class ChanXueYanimpl implements ChanXueYanService {
     public Teacher login(Integer username, String password) {
         return chanxueyanMapper.login(username,password);
     }
+
+    @Override
+    public int addteacher(String name, Integer badge, Integer role) {
+        int ref;
+        ref=chanxueyanMapper.addteacher(name,badge,badge,role);
+        return ref;
+    }
+
     @Override
     public List<Object> getTeacherList() {
         return  chanxueyanMapper.getTeacherList();

@@ -2,6 +2,7 @@ package com.example.graduate_sever.controller;
 
 
 import com.example.graduate_sever.common.*;
+import com.example.graduate_sever.common.UO.JiaoWuChuUO;
 import com.example.graduate_sever.model.Teacher;
 import com.example.graduate_sever.service.ChanXueYanService;
 import net.sourceforge.tess4j.ITesseract;
@@ -30,6 +31,12 @@ import java.util.UUID;
 public class Common {
     @Autowired
     private ChanXueYanService chanXueYanService;
+
+    @GetMapping(value = "/teacherAdd")
+    public int teacherAdd(String badge, String name,Integer role) throws Exception {
+        int ref=chanXueYanService.addteacher(name,Integer.parseInt(badge),role);
+        return  ref;
+    }
 
     @GetMapping("/getTeacherList")
     public List<Object> getTeacherList(){
@@ -83,8 +90,6 @@ public class Common {
         FileUtils.writeByteArrayToFile(targetFile, file.getBytes());
         return filepath;
     }
-
-
 
     public static String saveImgToLocal(WebDriver driver) throws Exception {
         String code=null;
