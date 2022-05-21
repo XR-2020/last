@@ -46,7 +46,7 @@
     </select>
 
     <select id="getBadge" parameterType="java.lang.Integer" resultMap="TeacherBadge">
-        select teacher.badeg from  participation,teacher where participation.badge=teacher.badeg and participation.ach_id=#{id} and participation.type=#{type}
+        select teacher.badeg from  newparticipation,teacher where newparticipation.badge=teacher.badeg and newparticipation.ach_id=#{id} and newparticipation.type=#{type}
     </select>
 
     <select id="getDisData" resultMap="MyShenBaoModel">
@@ -78,11 +78,11 @@
     </delete>
 
     <delete id="deleteDaiShenHePartipation">
-        delete from participation where ach_id=#{id} and type=#{type}
+        delete from newparticipation where ach_id=#{id} and type=#{type}
     </delete>
 
     <delete id="deletePeople">
-        delete from participation where ach_id=#{id} and type=#{type}
+        delete from newparticipation where ach_id=#{id} and type=#{type}
     </delete>
 
     <select id="login" resultMap="Teacher">

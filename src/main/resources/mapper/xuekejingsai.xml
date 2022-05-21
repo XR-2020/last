@@ -58,11 +58,11 @@
         select count(*) JingSai_count from competition c where status=1 and CONCAT(c.id,c.partment,c.name,c.finishtime,c.status,c.teacher,c.student,c.level,c.grade)  LIKE CONCAT('%',#{key},'%');
     </select>
     <insert id="insertJingSai" parameterType="com.example.graduate_sever.entity.CompetitionEntity" useGeneratedKeys="true" keyProperty="id">
-        INSERT IGNORE INTO `graduate`.`competition`( `status`, `finishtime`, `student`, `level`, `grade`, `name`,`partment`,`teacher`)  VALUES (#{status,jdbcType=INTEGER},#{finishtime,jdbcType=VARCHAR},#{student,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR})
+        INSERT IGNORE INTO competition( `status`, `finishtime`, `student`, `level`, `grade`, `name`,`partment`,`teacher`)  VALUES (#{status,jdbcType=INTEGER},#{finishtime,jdbcType=VARCHAR},#{student,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{partment,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR})
     </insert>
 
     <insert id="shenBaoJingSai" parameterType="com.example.graduate_sever.entity.CompetitionEntity" useGeneratedKeys="true" keyProperty="id">
-        INSERT IGNORE INTO `graduate`.`competition`( `status`, `finishtime`, `student`, `level`, `teacher`,`grade`, `name`,`partment`,`shenbao`,`metails`)  VALUES (#{status,jdbcType=INTEGER},#{finishtime,jdbcType=VARCHAR},#{student,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},'软件学院',#{badge,jdbcType=INTEGER},#{metails,jdbcType=BINARY})
+        INSERT IGNORE INTO competition( `status`, `finishtime`, `student`, `level`, `teacher`,`grade`, `name`,`partment`,`shenbao`,`metails`)  VALUES (#{status,jdbcType=INTEGER},#{finishtime,jdbcType=VARCHAR},#{student,jdbcType=VARCHAR},#{level,jdbcType=VARCHAR},#{teacher,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},'软件学院',#{badge,jdbcType=INTEGER},#{metails,jdbcType=BINARY})
     </insert>
 
     <select id="XueKeJingSaiMetails" parameterType="java.lang.Integer" resultMap="JingSaiMetails">

@@ -30,7 +30,7 @@ public class XueKeJingSai {
 
     @GetMapping("/getSearchJingSai")
     public ResVO getSearchJingSai(DTO dTO){
-//        System.out.println(chanXueYanDTO.getKey()+"______"+chanXueYanDTO.getPageIndex()+"_______"+chanXueYanDTO.getPageSize());
+        System.out.println(dTO.getKey()+"______"+dTO.getPageIndex()+"_______"+dTO.getPageSize());
         return service.getSearchJingSai(dTO);}
 
     @RequestMapping(value = "/deleteJingSai", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

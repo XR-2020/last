@@ -56,7 +56,6 @@ public class RongYuChengHaoimpl implements RongYuChengHaoService {
     public JsonBean deleteRongYu(List<Integer> ids) {
         for (Integer id:ids) {
             mapper.deleteOneRongYu(id);
-            chanXueYanMapper.deletePeople(id,14);
         }
         return new JsonBean(200,"","");
     }
@@ -64,7 +63,6 @@ public class RongYuChengHaoimpl implements RongYuChengHaoService {
     @Override
     public JsonBean deleteOneRongYu(Integer id) {
         mapper.deleteOneRongYu(id);
-        chanXueYanMapper.deletePeople(id,14);
         return new JsonBean(200,"","");
     }
 
