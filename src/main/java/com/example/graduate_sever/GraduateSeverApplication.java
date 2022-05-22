@@ -84,7 +84,6 @@ public class GraduateSeverApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(GraduateSeverApplication.class, args);
 
-
         //读取网站爬取时的用户名和密码配置文件
         Properties properties = new Properties();
         ClassPathResource classpathResource = new ClassPathResource("crawler.properties");//该路径是相对于src目录的，即classpath路径

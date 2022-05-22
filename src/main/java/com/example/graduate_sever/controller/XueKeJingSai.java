@@ -47,8 +47,11 @@ public class XueKeJingSai {
     @RequestMapping(value = "/updateCompetition", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonBean updateCompetition(@RequestBody CompetitionUO uo) throws IOException {
         StringBuffer str=new StringBuffer();
-        Integer role= uo.getRole();
+        for (String s:uo.getPeople()) {
+            str.append(s+" ");
+        }
         String people=str.toString();
+        Integer role= uo.getRole();
         CompetitionEntity element=new CompetitionEntity();
         element.setFinishtime(uo.getFinishtime());
         element.setGrade(uo.getGrade());
